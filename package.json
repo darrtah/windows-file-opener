@@ -1,9 +1,10 @@
 {
   "name": "windows-file-opener",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
-  "description": "Open local media and documents from OpenCode Desktop with Windows apps or show them in Explorer.",
+  "description": "Open local media and documents with Windows apps or Explorer, and website links in your default browser.",
   "scripts": {
     "test": "node --test paths.test.mjs",
     "build": "vite build"

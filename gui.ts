@@ -3,13 +3,14 @@ import { Ipc, LinkHandler, Plugin } from '@opencode/plugin/gui'
 import { dialog, shell } from 'electron'
 import { realpath, stat } from 'node:fs/promises'
 import path from 'node:path'
-import { candidate } from './paths.mjs'
+import { candidate, webAddress } from './paths.mjs'
 
 const Files = Ipc.define({
   id: 'windows-file-opener.files',
   methods: {
     exists: { input: Schema.String, output: Schema.Boolean },
     open: { input: Schema.String, output: Schema.String },
+    openWeb: { input: Schema.String, output: Schema.String },
   },
 })
 
@@ -45,10 +46,24 @@ export default Plugin.define({
         if (value) void files.open(value).then((error) => { if (error) alert(`Windows could not open this file: ${error}`) }).catch(() => alert('Could not open the file in Windows.'))
       },
     })
+    ctx.add(LinkHandler, {
+      priority: 100,
+      match: (link) => !!webAddress(link.href),
+      exists: (link) => !!webAddress(link.href),
+      open: (link) => {
+        const url = webAddress(link.href)
+        if (url) void files.openWeb(url).then((error) => { if (error) alert(`Could not open the link: ${error}`) }).catch(() => alert('Could not open the link in your browser.'))
+      },
+    })
   },
   main(ctx) {
     ctx.provide(Files, {
       exists: async (value) => !!(await safeFile(value)),
+      openWeb: async (value) => {
+        const url = webAddress(value)
+        if (!url) return 'Invalid website address.'
+        try { await shell.openExternal(url); return '' } catch { return 'Windows could not open the browser.' }
+      },
       open: async (value) => {
         const file = await safeFile(value)
         if (!file) return 'File not found or file type is not supported.'

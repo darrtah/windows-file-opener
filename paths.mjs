@@ -1,5 +1,13 @@
 const allowed = /\.(?:png|jpe?g|gif|webp|bmp|tiff?|avif|mp4|mov|mkv|webm|avi|m4v|pdf|docx?|xlsx?|pptx?|odt|ods|odp)$/i
 
+export function webAddress(href) {
+  if (typeof href !== 'string' || !/^https?:\/\//i.test(href) || /[\x00-\x20\x7f]/.test(href)) return undefined
+  try {
+    const url = new URL(href)
+    return (url.protocol === 'http:' || url.protocol === 'https:') && url.hostname && !url.username && !url.password ? url.href : undefined
+  } catch { return undefined }
+}
+
 export function candidate(href) {
   if (typeof href !== 'string' || !href || /[\x00-\x1f]/.test(href)) return undefined
   let value = href
