@@ -1,0 +1,18 @@
+{
+  "name": "windows-file-opener",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Open local media and documents from OpenCode Desktop with Windows apps or show them in Explorer.",
+  "scripts": {
+    "test": "node --test paths.test.mjs",
+    "build": "vite build"
+  },
+  "exports": { "./gui-experimental": "./gui-experimental.cjs" },
+  "devDependencies": {
+    "@opencode/plugin": "2.2.5",
+    "solid-js": "1.9.19",
+    "vite": "7.3.8",
+    "vite-plugin-solid": "2.11.10"
+  }
+}
